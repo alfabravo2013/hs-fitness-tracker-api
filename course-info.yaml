@@ -1,5 +1,5 @@
 type: hyperskill
-title: Public API
+title: Fitness Tracker API
 language: English
 summary: |-
   This is an introductory Java course.
@@ -9,4 +9,4 @@ summary: |-
   - The course is based on the author's personal experience in Java development.
 programming_language: Java
 content:
-  - Public API
+  - Fitness Tracker API

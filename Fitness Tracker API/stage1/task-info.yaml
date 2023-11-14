@@ -1,10 +1,10 @@
 type: edu
 files:
-  - name: src/publicapi/Application.java
+  - name: src/fitnesstracker/Application.java
     visible: true
-  - name: test/PublicApiTest.java
-    visible: false
   - name: build.gradle
     visible: true
   - name: src/resources/application.properties
     visible: true
+  - name: test/FitnessTrackerTest.java
+    visible: false
