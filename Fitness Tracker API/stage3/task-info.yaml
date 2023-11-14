@@ -4,12 +4,6 @@ files:
     visible: true
   - name: src/resources/application.properties
     visible: true
-  - name: test/FitnessTrackerTest.java
-    visible: false
-  - name: test/DataRecord.java
-    visible: false
-  - name: test/DevProfile.java
-    visible: false
   - name: src/fitnesstracker/developer/DeveloperRestController.java
     visible: true
   - name: src/fitnesstracker/tracker/FitnessData.java
@@ -42,5 +36,27 @@ files:
     visible: true
   - name: src/fitnesstracker/security/SecurityUser.java
     visible: true
+  - name: test/DataRecord.java
+    visible: false
+  - name: test/FitnessTrackerTest.java
+    visible: false
+  - name: test/DevProfile.java
+    visible: false
   - name: src/fitnesstracker/FitnessTrackerApplication.java
     visible: true
+  - name: src/fitnesstracker/application/ApplicationRestController.java
+    visible: true
+  - name: src/fitnesstracker/application/Application.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationRegistrationRequest.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationService.java
+    visible: true
+  - name: src/fitnesstracker/application/ApiKeyDto.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationProfile.java
+    visible: true
+  - name: src/fitnesstracker/application/ApiKeyDecisionMaker.java
+    visible: true
+  - name: test/AppProfile.java
+    visible: false

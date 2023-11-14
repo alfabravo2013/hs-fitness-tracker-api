@@ -1,7 +1,5 @@
 type: edu
 files:
-  - name: src/fitnesstracker/Application.java
-    visible: true
   - name: build.gradle
     visible: true
   - name: src/resources/application.properties
@@ -21,4 +19,6 @@ files:
   - name: src/fitnesstracker/tracker/repository/FitnessDataRepository.java
     visible: true
   - name: src/fitnesstracker/tracker/service/FitnessDataService.java
+    visible: true
+  - name: src/fitnesstracker/FitnessTrackerApplication.java
     visible: true

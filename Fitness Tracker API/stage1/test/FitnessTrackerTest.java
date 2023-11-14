@@ -25,12 +25,7 @@ public class FitnessTrackerTest extends SpringTest {
         for (var item : data) {
             HttpResponse response = post(trackerUrl, gson.toJson(item)).send();
 
-            checkStatusCode(
-                    "POST",
-                    trackerUrl,
-                    response.getStatusCode(),
-                    201
-            );
+            checkStatusCode(response, 201);
         }
         return CheckResult.correct();
     }
@@ -38,22 +33,17 @@ public class FitnessTrackerTest extends SpringTest {
     CheckResult testGetTracker(DataRecord[] data) {
         HttpResponse response = get(trackerUrl).send();
 
-        checkStatusCode(
-                "GET",
-                trackerUrl,
-                response.getStatusCode(),
-                200
-        );
+        checkStatusCode(response, 200);
 
         checkJson(response, trackerUrl, data);
 
         return CheckResult.correct();
     }
 
-    private void checkStatusCode(String method,
-                                 String endpoint,
-                                 int actual,
-                                 int expected) {
+    private void checkStatusCode(HttpResponse response, int expected) {
+        var actual = response.getStatusCode();
+        var method = response.getRequest().getMethod();
+        var endpoint = response.getRequest().getEndpoint();
         if (actual != expected) {
             throw new WrongAnswer("""
                     %s %s should respond with status code %d, responded with %d
@@ -119,7 +109,7 @@ public class FitnessTrackerTest extends SpringTest {
             .toArray(DataRecord[]::new);
 
     @DynamicTest
-    DynamicTesting[] dt = new DynamicTesting[] {
+    DynamicTesting[] dt = new DynamicTesting[]{
             () -> testPostTracker(records),
             () -> testGetTracker(records),
             this::reloadServer,
