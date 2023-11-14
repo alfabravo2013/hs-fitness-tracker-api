@@ -8,3 +8,17 @@ files:
     visible: true
   - name: test/FitnessTrackerTest.java
     visible: false
+  - name: src/fitnesstracker/tracker/web/TrackerRestController.java
+    visible: true
+  - name: src/fitnesstracker/tracker/web/DataUploadRequest.java
+    visible: true
+  - name: src/fitnesstracker/tracker/web/DataDto.java
+    visible: true
+  - name: src/fitnesstracker/tracker/model/FitnessData.java
+    visible: true
+  - name: test/DataRecord.java
+    visible: false
+  - name: src/fitnesstracker/tracker/repository/FitnessDataRepository.java
+    visible: true
+  - name: src/fitnesstracker/tracker/service/FitnessDataService.java
+    visible: true
