@@ -1,0 +1,10 @@
+type: edu
+files:
+  - name: src/publicapi/Application.java
+    visible: true
+  - name: test/PublicApiTest.java
+    visible: false
+  - name: build.gradle
+    visible: true
+  - name: src/resources/application.properties
+    visible: true
