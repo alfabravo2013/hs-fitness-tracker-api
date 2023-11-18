@@ -1,10 +1,20 @@
 class DevProfile {
+    private Object id;
     private String email;
     private String password;
 
     DevProfile(String email, String password) {
+        this.id = null;
         this.email = email;
         this.password = password;
+    }
+
+    public Object getId() {
+        return id;
+    }
+
+    public void setId(Object id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -33,14 +43,6 @@ class DevProfileMother {
 
     static DevProfile bob() {
         return new DevProfile("bob@example.net", "12345");
-    }
-
-    static DevProfile carol() {
-        return new DevProfile("carol@dev.org", "secret");
-    }
-
-    static DevProfile dave() {
-        return new DevProfile("dangerousdave@idsw.com", "secret");
     }
 
     static DevProfile withBadEmail(String email) {

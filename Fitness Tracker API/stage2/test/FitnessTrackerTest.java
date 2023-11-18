@@ -19,6 +19,10 @@ public class FitnessTrackerTest extends SpringTest {
     private final String trackerUrl = "/api/tracker";
     private final String signupUrl = "/api/developers/signup";
 
+    private final DevProfile alice = DevProfileMother.alice();
+    private final DevProfile aliceCopy = DevProfileMother.alice();
+    private final DevProfile bob = DevProfileMother.bob();
+
     public FitnessTrackerTest() {
         super("../fitness_db.mv.db");
     }
@@ -60,6 +64,8 @@ public class FitnessTrackerTest extends SpringTest {
             );
         }
 
+        devProfile.setId(location.replaceAll(".+/", ""));
+
         return CheckResult.correct();
     }
 
@@ -72,28 +78,29 @@ public class FitnessTrackerTest extends SpringTest {
     }
 
     CheckResult testGetProfile(DevProfile devProfile,
-                               DevProfile unauthorized,
-                               DevProfile unauthenticated) {
-        HttpResponse response = post(signupUrl, gson.toJson(devProfile)).send();
-
-        checkStatusCode(response, 201);
-
-        var location = response.getHeaders().get("Location");
+                               DevProfile anotherDevProfile) {
+        var profileUrl = "/api/developers/" + devProfile.getId();
 
         // no auth
-        response = get(location).send();
+        HttpResponse response = get(profileUrl).send();
         checkStatusCode(response, 401);
 
         // bad credentials
-        response = get(location).basicAuth(unauthenticated.getEmail(), unauthenticated.getPassword()).send();
+        response = get(profileUrl)
+                .basicAuth(devProfile.getEmail(), devProfile.getPassword() + "12345")
+                .send();
         checkStatusCode(response, 401);
 
         // wrong user
-        response = get(location).basicAuth(unauthorized.getEmail(), unauthorized.getPassword()).send();
+        response = get(profileUrl)
+                .basicAuth(anotherDevProfile.getEmail(), anotherDevProfile.getPassword())
+                .send();
         checkStatusCode(response, 403);
 
         // proper user
-        response = get(location).basicAuth(devProfile.getEmail(), devProfile.getPassword()).send();
+        response = get(profileUrl)
+                .basicAuth(devProfile.getEmail(), devProfile.getPassword())
+                .send();
         checkStatusCode(response, 200);
 
         checkProfileJson(
@@ -192,22 +199,19 @@ public class FitnessTrackerTest extends SpringTest {
             .limit(4)
             .toArray(DataRecord[]::new);
 
-    DevProfile alice = DevProfileMother.alice();
-    DevProfile dave = DevProfileMother.dave();
-    DevProfile bob = DevProfileMother.bob();
-
     @DynamicTest
     DynamicTesting[] dt = new DynamicTesting[]{
             () -> testRegisterValidDev(alice),
+            () -> testRegisterValidDev(bob),
             () -> testRegisterInvalidDev(DevProfileMother.withBadEmail(null)),
             () -> testRegisterInvalidDev(DevProfileMother.withBadEmail("")),
             () -> testRegisterInvalidDev(DevProfileMother.withBadEmail("email")),
             () -> testRegisterInvalidDev(DevProfileMother.withBadPassword(null)),
             () -> testRegisterInvalidDev(DevProfileMother.withBadPassword("")),
-            () -> testRegisterInvalidDev(alice),
+            () -> testRegisterInvalidDev(aliceCopy),
             () -> testPostTracker(records),
             () -> testGetTracker(records),
-            () -> testGetProfile(bob, alice, dave),
+            () -> testGetProfile(alice, bob),
             this::reloadServer,
             () -> testGetTracker(records),
     };

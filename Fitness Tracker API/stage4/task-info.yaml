@@ -52,11 +52,11 @@ files:
     visible: true
   - name: src/fitnesstracker/application/ApiKeyDecisionMaker.java
     visible: true
-  - name: test/DataRecord.java
-    visible: false
   - name: test/DevProfile.java
     visible: false
   - name: test/AppProfile.java
+    visible: false
+  - name: test/DataRecord.java
     visible: false
   - name: test/FitnessTrackerTest.java
     visible: false
