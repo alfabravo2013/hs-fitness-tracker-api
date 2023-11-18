@@ -35,7 +35,7 @@ public class FitnessTrackerTest extends SpringTest {
 
         checkStatusCode(response, 200);
 
-        checkJson(response, trackerUrl, data);
+        checkDataJson(response, data);
 
         return CheckResult.correct();
     }
@@ -52,15 +52,7 @@ public class FitnessTrackerTest extends SpringTest {
         }
     }
 
-    private void checkJson(HttpResponse response,
-                           String endpoint,
-                           DataRecord[] expectedData) {
-        try {
-            response.getJson();
-        } catch (Exception e) {
-            throw new WrongAnswer("GET %s should return a valid JSON".formatted(endpoint));
-        }
-
+    private void checkDataJson(HttpResponse response, DataRecord[] expectedData) {
         expect(response.getContent()).asJson().check(
                 isArray(expectedData.length)
                         .item(isObject()

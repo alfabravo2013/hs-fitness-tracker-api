@@ -2,11 +2,15 @@ import com.google.gson.Gson;
 import org.hyperskill.hstest.dynamic.DynamicTest;
 import org.hyperskill.hstest.dynamic.input.DynamicTesting;
 import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
+import org.hyperskill.hstest.mocks.web.request.HttpRequest;
 import org.hyperskill.hstest.mocks.web.response.HttpResponse;
 import org.hyperskill.hstest.stage.SpringTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -17,6 +21,7 @@ import static org.hyperskill.hstest.testing.expect.json.JsonChecker.isObject;
 import static org.hyperskill.hstest.testing.expect.json.JsonChecker.isString;
 
 public class FitnessTrackerTest extends SpringTest {
+    private final Random rnd = ThreadLocalRandom.current();
     private final Gson gson = new Gson();
     private final String trackerUrl = "/api/tracker";
     private final String signupUrl = "/api/developers/signup";
@@ -25,31 +30,54 @@ public class FitnessTrackerTest extends SpringTest {
     private final DevProfile aliceCopy = DevProfileMother.alice();
     private final DevProfile bob = DevProfileMother.bob();
     private final AppProfile demo1 = AppProfileMother.demo1();
+    private final AppProfile demo1Copy = AppProfileMother.demo1();
     private final AppProfile demo2 = AppProfileMother.demo2();
 
     public FitnessTrackerTest() {
         super("../fitness_db.mv.db");
     }
 
-    CheckResult testPostTracker(DataRecord[] data) {
-        for (var item : data) {
-            HttpResponse response = post(trackerUrl, gson.toJson(item)).send();
+    CheckResult testPostTracker(DataRecord[] data, AppProfile appProfile) {
+        for (DataRecord item : data) {
+            HttpResponse response = post(trackerUrl, gson.toJson(item))
+                    .addHeader("X-API-Key", appProfile.getApikey())
+                    .send();
             checkStatusCode(response, 201);
+
+            item.setApplication(appProfile.getName());
         }
         return CheckResult.correct();
     }
 
-    CheckResult testGetTracker(DataRecord[] data) {
-        HttpResponse response = get(trackerUrl).send();
+    CheckResult testPostTrackerUnauthenticated(DataRecord data, AppProfile appProfile) {
+        HttpRequest request = post(trackerUrl, gson.toJson(data));
+        if (appProfile.getApikey() != null) {
+            request = request.addHeader("X-API-Key", appProfile.getApikey());
+        }
+        HttpResponse response = request.send();
+        checkStatusCode(response, 401);
+
+        return CheckResult.correct();
+    }
+
+    CheckResult testGetTracker(DataRecord[] data, AppProfile appProfile) {
+        HttpResponse response = get(trackerUrl)
+                .addHeader("X-API-Key", appProfile.getApikey())
+                .send();
 
         checkStatusCode(response, 200);
+        checkDataJson(response, data);
 
-        checkDataJson(
-                response,
-                "GET",
-                response.getRequest().getEndpoint(),
-                data
-        );
+        return CheckResult.correct();
+    }
+
+    CheckResult testGetTrackerUnauthenticated(AppProfile appProfile) {
+        HttpRequest request = get(trackerUrl);
+        if (appProfile.getApikey() != null) {
+            request = request.addHeader("X-API-Key", appProfile.getApikey());
+        }
+        HttpResponse response = request.send();
+        checkStatusCode(response, 401);
 
         return CheckResult.correct();
     }
@@ -80,14 +108,12 @@ public class FitnessTrackerTest extends SpringTest {
         return CheckResult.correct();
     }
 
-    CheckResult testRegisterApp(DevProfile devProfile,
-                                AppProfile appProfile) {
+    CheckResult testRegisterApp(DevProfile devProfile, AppProfile appProfile) {
         HttpResponse response = post(registerUrl, gson.toJson(appProfile))
                 .basicAuth(devProfile.getEmail(), devProfile.getPassword())
                 .send();
 
         checkStatusCode(response, 201);
-
         checkAppRegistrationResponseJson(response, appProfile);
 
         var apikey = response.getJson().getAsJsonObject().get("apikey").getAsString();
@@ -136,7 +162,6 @@ public class FitnessTrackerTest extends SpringTest {
                 .basicAuth(devProfile.getEmail(), devProfile.getPassword())
                 .send();
         checkStatusCode(response, 200);
-
         checkProfileJson(response, devProfile);
 
         return CheckResult.correct();
@@ -154,16 +179,7 @@ public class FitnessTrackerTest extends SpringTest {
         }
     }
 
-    private void checkDataJson(HttpResponse response,
-                               String method,
-                               String endpoint,
-                               DataRecord[] expectedData) {
-        try {
-            response.getJson();
-        } catch (Exception e) {
-            throw new WrongAnswer("%s %s should return a valid JSON".formatted(method, endpoint));
-        }
-
+    private void checkDataJson(HttpResponse response, DataRecord[] expectedData) {
         expect(response.getContent()).asJson().check(
                 isArray(expectedData.length)
                         .item(isObject()
@@ -172,6 +188,7 @@ public class FitnessTrackerTest extends SpringTest {
                                 .value("activity", expectedData[3].getActivity())
                                 .value("duration", expectedData[3].getDuration())
                                 .value("calories", expectedData[3].getCalories())
+                                .value("application", expectedData[3].getApplication())
                         )
                         .item(isObject()
                                 .value("id", any())
@@ -179,6 +196,7 @@ public class FitnessTrackerTest extends SpringTest {
                                 .value("activity", expectedData[2].getActivity())
                                 .value("duration", expectedData[2].getDuration())
                                 .value("calories", expectedData[2].getCalories())
+                                .value("application", expectedData[2].getApplication())
                         )
                         .item(isObject()
                                 .value("id", any())
@@ -186,6 +204,7 @@ public class FitnessTrackerTest extends SpringTest {
                                 .value("activity", expectedData[1].getActivity())
                                 .value("duration", expectedData[1].getDuration())
                                 .value("calories", expectedData[1].getCalories())
+                                .value("application", expectedData[1].getApplication())
                         )
                         .item(isObject()
                                 .value("id", any())
@@ -193,12 +212,12 @@ public class FitnessTrackerTest extends SpringTest {
                                 .value("activity", expectedData[0].getActivity())
                                 .value("duration", expectedData[0].getDuration())
                                 .value("calories", expectedData[0].getCalories())
+                                .value("application", expectedData[0].getApplication())
                         )
         );
     }
 
-    private void checkProfileJson(HttpResponse response,
-                                  DevProfile expectedData) {
+    private void checkProfileJson(HttpResponse response, DevProfile expectedData) {
         var applications = expectedData.getApplications();
 
         expect(response.getContent()).asJson().check(
@@ -222,8 +241,7 @@ public class FitnessTrackerTest extends SpringTest {
         );
     }
 
-    private void checkAppRegistrationResponseJson(HttpResponse response,
-                                                  AppProfile expectedData) {
+    private void checkAppRegistrationResponseJson(HttpResponse response, AppProfile expectedData) {
         expect(response.getContent()).asJson().check(
                 isObject()
                         .value("name", expectedData.getName())
@@ -255,16 +273,22 @@ public class FitnessTrackerTest extends SpringTest {
             () -> testRegisterInvalidDev(DevProfileMother.withBadPassword(null)),
             () -> testRegisterInvalidDev(DevProfileMother.withBadPassword("")),
             () -> testRegisterInvalidDev(aliceCopy),
-            () -> testPostTracker(records),
-            () -> testGetTracker(records),
             () -> testRegisterApp(alice, demo1),
             () -> testRegisterApp(alice, demo2),
-            () -> testRegisterInvalidApp(alice, demo1),
+            () -> testRegisterInvalidApp(alice, demo1Copy),
             () -> testRegisterInvalidApp(alice, AppProfileMother.withBadName(null)),
             () -> testRegisterInvalidApp(alice, AppProfileMother.withBadName(" ")),
             () -> testRegisterInvalidApp(alice, AppProfileMother.withBadDescription(null)),
             () -> testGetProfile(alice, bob),
+            () -> testPostTracker(records, rnd.nextBoolean() ? demo1 : demo2),
+            () -> testPostTrackerUnauthenticated(DataRecordMother.createRecord(),
+                    AppProfileMother.withBadApiKey(null)),
+            () -> testPostTrackerUnauthenticated(DataRecordMother.createRecord(),
+                    AppProfileMother.withBadApiKey(UUID.randomUUID().toString())),
+            () -> testGetTracker(records, rnd.nextBoolean() ? demo1 : demo2),
+            () -> testGetTrackerUnauthenticated(AppProfileMother.withBadApiKey(null)),
+            () -> testGetTrackerUnauthenticated(AppProfileMother.withBadApiKey(UUID.randomUUID().toString())),
             this::reloadServer,
-            () -> testGetTracker(records),
+            () -> testGetTracker(records, rnd.nextBoolean() ? demo1 : demo2),
     };
 }

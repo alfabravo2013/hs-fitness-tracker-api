@@ -30,7 +30,6 @@ public class FitnessTrackerTest extends SpringTest {
     CheckResult testPostTracker(DataRecord[] data) {
         for (var item : data) {
             HttpResponse response = post(trackerUrl, gson.toJson(item)).send();
-
             checkStatusCode(response, 201);
         }
         return CheckResult.correct();
@@ -40,13 +39,7 @@ public class FitnessTrackerTest extends SpringTest {
         HttpResponse response = get(trackerUrl).send();
 
         checkStatusCode(response, 200);
-
-        checkDataJson(
-                response,
-                "GET",
-                response.getRequest().getEndpoint(),
-                data
-        );
+        checkDataJson(response, data);
 
         return CheckResult.correct();
     }
@@ -102,13 +95,7 @@ public class FitnessTrackerTest extends SpringTest {
                 .basicAuth(devProfile.getEmail(), devProfile.getPassword())
                 .send();
         checkStatusCode(response, 200);
-
-        checkProfileJson(
-                response,
-                "GET",
-                response.getRequest().getEndpoint(),
-                devProfile
-        );
+        checkProfileJson(response, devProfile);
 
         return CheckResult.correct();
     }
@@ -125,16 +112,7 @@ public class FitnessTrackerTest extends SpringTest {
         }
     }
 
-    private void checkDataJson(HttpResponse response,
-                               String method,
-                               String endpoint,
-                               DataRecord[] expectedData) {
-        try {
-            response.getJson();
-        } catch (Exception e) {
-            throw new WrongAnswer("%s %s should return a valid JSON".formatted(method, endpoint));
-        }
-
+    private void checkDataJson(HttpResponse response, DataRecord[] expectedData) {
         expect(response.getContent()).asJson().check(
                 isArray(expectedData.length)
                         .item(isObject()
@@ -168,16 +146,7 @@ public class FitnessTrackerTest extends SpringTest {
         );
     }
 
-    private void checkProfileJson(HttpResponse response,
-                                  String method,
-                                  String endpoint,
-                                  DevProfile expectedData) {
-        try {
-            response.getJson();
-        } catch (Exception e) {
-            throw new WrongAnswer("%s %s should return a valid JSON".formatted(method, endpoint));
-        }
-
+    private void checkProfileJson(HttpResponse response, DevProfile expectedData) {
         expect(response.getContent()).asJson().check(
                 isObject()
                         .value("id", any())
