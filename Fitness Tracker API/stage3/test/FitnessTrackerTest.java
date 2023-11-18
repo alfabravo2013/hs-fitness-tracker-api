@@ -258,6 +258,7 @@ public class FitnessTrackerTest extends SpringTest {
     AppProfile demo1 = AppProfileMother.demo1();
     AppProfile demo2 = AppProfileMother.demo2NoDescription();
     AppProfile noNameApp = AppProfileMother.noName();
+    AppProfile blankNameApp = AppProfileMother.noName().setName(" ");
     AppProfile demo3 = AppProfileMother.demo1().setName("app 3");
     AppProfile demo4 = AppProfileMother.demo1().setName("app 4");
 
@@ -276,6 +277,7 @@ public class FitnessTrackerTest extends SpringTest {
             () -> testRegisterApp(alice, demo2),
             () -> testRegisterInvalidApp(alice, demo1),
             () -> testRegisterInvalidApp(alice, noNameApp),
+            () -> testRegisterInvalidApp(alice, blankNameApp),
             () -> testGetProfile(bob, alice, dave, demo3, demo4),
             this::reloadServer,
             () -> testGetTracker(records),
