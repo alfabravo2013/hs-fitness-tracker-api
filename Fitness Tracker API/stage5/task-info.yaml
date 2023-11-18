@@ -1,0 +1,76 @@
+type: edu
+files:
+  - name: build.gradle
+    visible: true
+  - name: src/resources/application.properties
+    visible: true
+  - name: src/fitnesstracker/developer/DeveloperRestController.java
+    visible: true
+  - name: src/fitnesstracker/tracker/FitnessData.java
+    visible: true
+  - name: src/fitnesstracker/tracker/FitnessDataRepository.java
+    visible: true
+  - name: src/fitnesstracker/tracker/FitnessDataService.java
+    visible: true
+  - name: src/fitnesstracker/tracker/DataDto.java
+    visible: true
+  - name: src/fitnesstracker/tracker/DataUploadRequest.java
+    visible: true
+  - name: src/fitnesstracker/tracker/TrackerRestController.java
+    visible: true
+  - name: src/fitnesstracker/developer/DeveloperRegistrationRequest.java
+    visible: true
+  - name: src/fitnesstracker/developer/Developer.java
+    visible: true
+  - name: src/fitnesstracker/developer/DeveloperRepository.java
+    visible: true
+  - name: src/fitnesstracker/developer/DeveloperService.java
+    visible: true
+  - name: src/fitnesstracker/common/FitnessTrackerApiException.java
+    visible: true
+  - name: src/fitnesstracker/developer/DeveloperProfile.java
+    visible: true
+  - name: src/fitnesstracker/security/SecurityConfig.java
+    visible: true
+  - name: src/fitnesstracker/security/AppUserDetailsService.java
+    visible: true
+  - name: src/fitnesstracker/security/SecurityUser.java
+    visible: true
+  - name: src/fitnesstracker/FitnessTrackerApplication.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationRestController.java
+    visible: true
+  - name: src/fitnesstracker/application/Application.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationRegistrationRequest.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationService.java
+    visible: true
+  - name: src/fitnesstracker/application/ApiKeyDto.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationProfile.java
+    visible: true
+  - name: src/fitnesstracker/application/ApiKeyDecisionMaker.java
+    visible: true
+  - name: src/fitnesstracker/security/ApiKeyAuthentication.java
+    visible: true
+  - name: src/fitnesstracker/security/ApiKeyAuthenticationFilter.java
+    visible: true
+  - name: src/fitnesstracker/security/ApiKeyAuthenticationProvider.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationRepository.java
+    visible: true
+  - name: src/fitnesstracker/security/MyConfigurer.java
+    visible: true
+  - name: test/FitnessTrackerTest.java
+    visible: false
+  - name: test/DevProfile.java
+    visible: false
+  - name: test/AppProfile.java
+    visible: false
+  - name: test/DataRecord.java
+    visible: false
+  - name: src/fitnesstracker/tracker/RateLimiter.java
+    visible: true
+  - name: src/fitnesstracker/tracker/RateLimitExceededException.java
+    visible: true
