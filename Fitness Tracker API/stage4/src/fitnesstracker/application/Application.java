@@ -26,7 +26,7 @@ public class Application {
     private String description;
 
     @Column(nullable = false)
-    private String apikey;
+    private String apiKey;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "developer_id")
@@ -59,12 +59,12 @@ public class Application {
         this.description = description;
     }
 
-    public String getApikey() {
-        return apikey;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public void setApikey(String apikey) {
-        this.apikey = apikey;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public Developer getDeveloper() {

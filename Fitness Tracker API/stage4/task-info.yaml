@@ -60,3 +60,13 @@ files:
     visible: false
   - name: test/FitnessTrackerTest.java
     visible: false
+  - name: src/fitnesstracker/security/ApiKeyAuthentication.java
+    visible: true
+  - name: src/fitnesstracker/security/ApiKeyAuthenticationFilter.java
+    visible: true
+  - name: src/fitnesstracker/security/ApiKeyAuthenticationProvider.java
+    visible: true
+  - name: src/fitnesstracker/application/ApplicationRepository.java
+    visible: true
+  - name: src/fitnesstracker/security/MyConfigurer.java
+    visible: true

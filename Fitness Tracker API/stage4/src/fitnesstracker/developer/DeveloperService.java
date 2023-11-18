@@ -53,7 +53,7 @@ public class DeveloperService {
                                         app.getId(),
                                         app.getName(),
                                         app.getDescription(),
-                                        app.getApikey()
+                                        app.getApiKey()
                                 )
                         ).toList()
         );

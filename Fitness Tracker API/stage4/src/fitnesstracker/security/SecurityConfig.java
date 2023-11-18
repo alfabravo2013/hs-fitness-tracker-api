@@ -14,14 +14,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+    private final MyConfigurer configurer;
+
+    public SecurityConfig(MyConfigurer configurer) {
+        this.configurer = configurer;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.apply(configurer);
         return httpSecurity
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/developers/signup").permitAll()
-                        .requestMatchers("/error", "/actuator/shutdown", "/api/tracker").permitAll()
+                        .requestMatchers("/error", "/actuator/shutdown").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

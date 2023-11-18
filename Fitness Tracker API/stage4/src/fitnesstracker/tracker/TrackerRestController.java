@@ -1,6 +1,8 @@
 package fitnesstracker.tracker;
 
+import fitnesstracker.application.Application;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +21,9 @@ public class TrackerRestController {
 
     @PostMapping(path = "/api/tracker")
     @ResponseStatus(HttpStatus.CREATED)
-    public void postData(@RequestBody DataUploadRequest request) {
-        service.insertData(request);
+    public void postData(@RequestBody DataUploadRequest request,
+                         @AuthenticationPrincipal Application application) {
+        service.insertData(request, application);
     }
 
     @GetMapping(path = "/api/tracker")

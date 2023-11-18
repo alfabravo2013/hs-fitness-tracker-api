@@ -1,5 +1,6 @@
 package fitnesstracker.tracker;
 
+import fitnesstracker.application.Application;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,14 @@ public class FitnessDataService {
         this.repository = repository;
     }
 
-    public void insertData(DataUploadRequest request) {
+    public void insertData(DataUploadRequest request, Application application) {
         var entity = new FitnessData();
         entity.setUsername(request.username());
         entity.setActivity(request.activity());
         entity.setDuration(request.duration());
         entity.setCalories(request.calories());
+        entity.setApplication(application.getName());
+
         repository.save(entity);
     }
 
@@ -35,7 +38,8 @@ public class FitnessDataService {
                 entity.getUsername(),
                 entity.getActivity(),
                 entity.getDuration(),
-                entity.getCalories()
+                entity.getCalories(),
+                entity.getApplication()
         );
     }
 }

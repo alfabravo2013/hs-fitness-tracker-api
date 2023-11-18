@@ -17,6 +17,7 @@ public class FitnessData {
     private String activity;
     private int duration;
     private int calories;
+    private String application;
     @CreationTimestamp
     private Date timestamp;
 
@@ -58,6 +59,14 @@ public class FitnessData {
 
     public void setCalories(int calories) {
         this.calories = calories;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
     }
 
     public Date getTimestamp() {

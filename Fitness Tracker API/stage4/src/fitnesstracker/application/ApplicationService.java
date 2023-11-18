@@ -32,7 +32,7 @@ public class ApplicationService {
 
         application.setName(request.name());
         application.setDescription(request.description());
-        application.setApikey(apikey);
+        application.setApiKey(apikey);
         application.setDeveloper(developer);
 
         developer.getApplications().add(application);
@@ -40,7 +40,7 @@ public class ApplicationService {
 
         return new ApiKeyDto(
                 application.getName(),
-                application.getApikey()
+                application.getApiKey()
         );
     }
 
@@ -53,7 +53,7 @@ public class ApplicationService {
 
         developer.getApplications().remove(application);
         var apikey = generateApiKey();
-        application.setApikey(apikey);
+        application.setApiKey(apikey);
         developer.getApplications().add(application);
         developerService.updateDeveloper(developer);
 

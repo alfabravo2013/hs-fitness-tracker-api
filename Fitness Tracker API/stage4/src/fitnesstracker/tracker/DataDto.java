@@ -5,6 +5,7 @@ public record DataDto(
         String username,
         String activity,
         int duration,
-        int calories
+        int calories,
+        String application
 ) {
 }
